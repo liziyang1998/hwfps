@@ -10,7 +10,7 @@ def hello_world():
 
 
 @app.route('/getScore')
-def hello_world():
+def getHwScore():
     return '获取华为分'
 
 if __name__ == "__main__":

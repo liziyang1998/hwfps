@@ -57,8 +57,26 @@ class Member:
         pass
 
 
-def getInput():
-    
+memberList = []
+weightList = {}
 
-if __name__ == "__main__":
-    getInput()
+def getWeightMap():
+    weightList['rws'] = Weight(2.0, BASERWS, 100)
+    weightList['rating'] = Weight(2.0, BASERATING, 100)
+    weightList['adr'] = Weight(2.0, BASEADR, 200)
+    weightList['we'] = Weight(2.0, BASEWE, 100)
+
+def getInput():
+    getWeightMap()
+    n = input('输入人数:\n')
+    for loopi in range(0, int(n)):
+        info = input('输入姓名、工号、赛季数据数量:\n').split(' ')
+        name, id, season = info[0], info[1], int(info[2])
+        member = Member(name, id, season)
+        memberList.append(member)
+        for loopj in range(0, season):
+            data = input('输入平台类型(完美是0,5e是1)、天梯分、rating、rws/we、adr、场次、胜率:\n').split(' ')
+            print(data)
+
+
+getInput()
