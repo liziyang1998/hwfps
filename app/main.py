@@ -16,13 +16,13 @@ def getHwScore():
     id = request.json.get("id")
     season = request.json.get("season")
     if name == None or id == None or season == None:
-        return 'input error'
+        return 'input error, name/id/season is Nonde'
     if type(name) != str:
-        return 'input error'
+        return 'input error, name is not str'
     if type(id) != str:
-        return 'input error'
+        return 'input error, id is not str'
     if type(season) != int:
-        return 'input error'
+        return 'input error, season is not int'
     
     platyType = []
     score = []
@@ -34,7 +34,7 @@ def getHwScore():
 
     seasonData = request.json.get("seasonData")
     if type(seasonData) != list:
-        return 'input error'
+        return 'input error, seasonData is not list'
     for i in range(0, season):
         try:
             int(seasonData[i][0])
