@@ -133,7 +133,7 @@ private:
         winScore = ((winMax-winMin)/(2.0-0.5) * (base-0.5) + winMin) * winTimes;
         // 失败局减分
         lossScore = ((lossMax-lossMin)/(2.0-0.5) * (base-0.5) + lossMin) * lossTimes;
-        return score[index] - Max((winScore+lossScore)*(1, 20/times[index]), 0);
+        return score[index] - Max((winScore+lossScore)*Max(1, 20/times[index]), 0);
     }
 
     double getAtan(double x) {
