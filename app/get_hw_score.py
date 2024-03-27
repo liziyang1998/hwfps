@@ -98,16 +98,14 @@ class Member:
             return res
 
 memberList = []
-weightList = {}
-
-def getWeightMap():
-    weightList['rws'] = Weight(2.0, BASERWS, 100)
-    weightList['rating'] = Weight(2.0, BASERATING, 100)
-    weightList['adr'] = Weight(2.0, BASEADR, 200)
-    weightList['we'] = Weight(2.0, BASEWE, 100)
+weightList = {
+    'rws' : Weight(2.0, BASERWS, 100),
+    'rating' : Weight(2.0, BASERATING, 100),
+    'adr' : Weight(2.0, BASEADR, 200),
+    'we' : Weight(2.0, BASEWE, 100)
+}
 
 def getInput():
-    getWeightMap()
     n = input('输入人数:\n')
     for loopi in range(0, int(n)):
         info = input('输入姓名、工号、赛季数据数量:\n').split(' ')
@@ -124,8 +122,16 @@ def getAllMemberScore():
     for member in memberList:
         print('%s,%s,%.2f'%(member.name, member.id, member.getRealScore(weightList)))
 
-def GetHwScore():
+def GetHwScoreByPOST(data):
+    name = data['name']
+    id = data['id']
+    season = data['season']
+    seasonData = data['seasonData']
+    member = Member(name, id, season)
+    for i in range(0, season):
+        member.addData(int(seasonData[i][0]), float(seasonData[i][1]), float(seasonData[i][2]), float(seasonData[i][3]), float(seasonData[i][4]), float(seasonData[i][5]), float(seasonData[i][6]))
+    return ('name = %s; id = %s; hwScore = %.2f'%(member.name, member.id, member.getRealScore(weightList)))
+
+def testGetHwScore():
     getInput()
     getAllMemberScore()
-
-GetHwScore()
