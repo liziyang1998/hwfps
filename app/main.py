@@ -16,7 +16,7 @@ def getHwScore():
     id = request.json.get("id")
     season = request.json.get("season")
     if name == None or id == None or season == None:
-        return 'input error, name/id/season is Nonde'
+        return 'input error, name/id/season is None'
     if type(name) != str:
         return 'input error, name is not str'
     if type(id) != str:
@@ -33,6 +33,8 @@ def getHwScore():
     rate = []
 
     seasonData = request.json.get("seasonData")
+    if seasonData == None:
+        return 'input error, seasonData is None'
     if type(seasonData) != list:
         return 'input error, seasonData is not list'
     for i in range(0, season):
