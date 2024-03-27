@@ -1,17 +1,24 @@
 import os
 
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return '欢迎使用微信云托管！'
+    return 'Hello World!'
 
 
-@app.route('/getScore')
+@app.route('/getHwScore', methods=["POST"])
 def getHwScore():
-    return '获取华为分'
+    username = request.form.get("username")
+    password = request.form.get("password")
+    print(username, password)
+    data = {
+        "username": username,
+        "password": password
+    }
+    return data
 
 if __name__ == "__main__":
     app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 80)))
