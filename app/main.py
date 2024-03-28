@@ -68,6 +68,8 @@ def getHwScore():
     except Exception as e:
         return 'input error: season未输入或不是整数'
     season = int(seasonStr)
+    if season > 1:
+        return '抱歉，当前只支持一个赛季，多赛季后续开发中'
     
     platyType = []
     score = []
