@@ -59,7 +59,7 @@ class Member:
             fixScore = weight['rating'].calc(self.rating[i]) + weight['adr'].calc(self.adr[i]) + (weight['we'].calc(self.rwsAndWe[i]) if self.platType[i] == 0 else weight['rws'].calc(self.rwsAndWe[i]))
             startScore = self.getStartScore(i, weight)
             realScore.append((self.score[i] + startScore) / 2 + self.getAtan(fixScore * max(0, self.getFixRate(self.times[i]))))
-        realScore.sort()
+        realScore.sort(reverse=True)
         num = min(self.season, 3)
         for i in range(0, num):
             ans = ans + realScore[i] * self._scoreRate[num][i]

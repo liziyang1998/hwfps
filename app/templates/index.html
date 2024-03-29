@@ -218,36 +218,83 @@
         <td><input type="text" size="15" maxlength="10" id="season"></td>
       </tr>
       <tr>
-        <td><label for="platType">平台类型:</label></td>
+        <td><label for="platType1">第一个赛季:</label></td>
         <td>
-          完美平台<input type="radio" value=0 name="platType" id="wanmei">
-          5e平台<input type="radio" value=1 name="platType" id="5e">
+          完美平台<input type="radio" value=0 name="platType1" id="wanmei">
+          5e平台<input type="radio" value=1 name="platType1" id="5e">
         </td>
       </tr>
       <tr>
-        <td><label for="score">天梯分:</label></td>
-        <td><input type="text" size="15" maxlength="10" id="score"></td>
+        <td><label for="score1">第一个赛季:</label></td>
+        <td>
+          天梯分&ensp;&ensp;&ensp;
+          rating&ensp;&ensp;&ensp;
+          rws/we&ensp;&ensp;&ensp;
+          adr&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+          场次&ensp;&ensp;&ensp;&ensp;&ensp;
+          胜率&ensp;&ensp;&ensp;
+          <br>
+          <input type="text" size="3" maxlength="5" id="score1">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="rating1">&ensp;
+          <input type="text" size="3" maxlength="5" id="rws1">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="adr1">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="times1">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="rate1">
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="platType2">第二个赛季:</label></td>
+        <td>
+          完美平台<input type="radio" value=0 name="platType2" id="wanmei">
+          5e平台<input type="radio" value=1 name="platType2" id="5e">
+        </td>
       </tr>
       <tr>
-        <td><label for="rating">rating:</label></td>
-        <td><input type="text" size="15" maxlength="10" id="rating"></td>
+        <td><label for="score2">第二个赛季:</label></td>
+        <td>
+          天梯分&ensp;&ensp;&ensp;
+          rating&ensp;&ensp;&ensp;
+          rws/we&ensp;&ensp;&ensp;
+          adr&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+          场次&ensp;&ensp;&ensp;&ensp;&ensp;
+          胜率&ensp;&ensp;&ensp;
+          <br>
+          <input type="text" size="3" maxlength="5" id="score2">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="rating2">&ensp;
+          <input type="text" size="3" maxlength="5" id="rws2">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="adr2">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="times2">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="rate2">
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="platType3">第三个赛季:</label></td>
+        <td>
+          完美平台<input type="radio" value=0 name="platType3" id="wanmei">
+          5e平台<input type="radio" value=1 name="platType3" id="5e">
+        </td>
       </tr>
       <tr>
-        <td><label for="rws">rws/we:</label></td>
-        <td><input type="text" size="15" maxlength="10" id="rws"></td>
+        <td><label for="score3">第三个赛季:</label></td>
+        <td>
+          天梯分&ensp;&ensp;&ensp;
+          rating&ensp;&ensp;&ensp;
+          rws/we&ensp;&ensp;&ensp;
+          adr&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+          场次&ensp;&ensp;&ensp;&ensp;&ensp;
+          胜率&ensp;&ensp;&ensp;
+          <br>
+          <input type="text" size="3" maxlength="5" id="score3">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="rating3">&ensp;
+          <input type="text" size="3" maxlength="5" id="rws3">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="adr3">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="times3">&ensp;&ensp;
+          <input type="text" size="3" maxlength="5" id="rate3">
+        </td>
       </tr>
-      <tr>
-        <td><label for="adr">adr:</label></td>
-        <td><input type="text" size="15" maxlength="10" id="adr"></td>
-      </tr>
-      <tr>
-        <td><label for="times">场次:</label></td>
-        <td><input type="text" size="15" maxlength="10" id="times"></td>
-      </tr>
-      <tr>
-        <td><label for="rate">胜率:</label></td>
-        <td><input type="text" size="15" maxlength="10" id="rate"></td>
-      </tr>
+
       <tr>
         <td><input type="submit" value="提交" onclick="submitToGetHwScore()" /></td>
       </tr>
@@ -265,29 +312,33 @@
 </body>
 <script src="https://mat1.gtimg.com/www/asset/lib/jquery/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript">
-  function submitToGetHwScore(){
-    var name = document.getElementById("name").value;
-    var id = document.getElementById("id").value;
-    var season = document.getElementById("season").value;
-    var platTypeList = document.getElementsByName('platType');
+  function getSeasonData(index) {
+    var platTypeList = document.getElementsByName('platType'+String(index));
     var platType = -1;
     for (var i = 0; i < platTypeList.length; i++) {
       if (platTypeList[i].checked) {
         platType = platTypeList[i].value
       }
     }
-    var score = document.getElementById("score").value;
-    var rating = document.getElementById("rating").value;
-    var rws = document.getElementById("rws").value;
-    var adr = document.getElementById("adr").value;
-    var times = document.getElementById("times").value;
-    var rate = document.getElementById("rate").value;
+    var score = document.getElementById("score"+String(index)).value;
+    var rating = document.getElementById("rating"+String(index)).value;
+    var rws = document.getElementById("rws"+String(index)).value;
+    var adr = document.getElementById("adr"+String(index)).value;
+    var times = document.getElementById("times"+String(index)).value;
+    var rate = document.getElementById("rate"+String(index)).value;
+    return [platType, score, rating, rws, adr, times, rate]
+  }
+
+  function submitToGetHwScore(){
+    var name = document.getElementById("name").value;
+    var id = document.getElementById("id").value;
+    var season = document.getElementById("season").value;
 
     var object = {};
     object['name'] = name;
     object['id'] = id;
     object['season'] = season;
-    object['seasonData'] = [[platType, score, rating, rws, adr, times, rate]]
+    object['seasonData'] = [getSeasonData(1), getSeasonData(2), getSeasonData(3)]
 
     var objectJson = JSON.stringify(object);
 

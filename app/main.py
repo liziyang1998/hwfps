@@ -12,45 +12,45 @@ def hello_world():
     """
     return render_template('index.html')
 
-def errorCheck(seasonData):
+def errorCheck(index, seasonData):
     try:
         int(seasonData[0])
     except Exception as e:
-        return 'input error: 平台类型' + str(e)
+        return ('第%d赛季: 平台类型' + str(e))%(index)
     if int(seasonData[0]) < 0:
-        return 'input error: 平台类型未选择'
+        return ('第%d赛季: 平台类型未选择')%(index)
     
     try:
         float(seasonData[1])
     except Exception as e:
-        return 'input error: 天梯分未输入或' + str(e)
+        return ('第%d赛季: 天梯分未输入或' + str(e))%(index)
     
     try:
         float(seasonData[2])
     except Exception as e:
-        return 'input error: rating未输入或' + str(e)
+        return ('第%d赛季: rating未输入或' + str(e))%(index)
 
     try:
         float(seasonData[3])
     except Exception as e:
-        return 'input error: rws/we未输入或' + str(e)
+        return ('第%d赛季: rws/we未输入或' + str(e))%(index)
 
     try:
         float(seasonData[4])
     except Exception as e:
-        return 'input error: adr未输入或' + str(e)
+        return ('第%d赛季: adr未输入或' + str(e))%(index)
 
     try:
         float(seasonData[5])
     except Exception as e:
-        return 'input error: 场次未输入或' + str(e)
-    if float(seasonData[5]) <= 5:
-        return 'input error: 请先进行5场以上的比赛以定级'
+        return ('第%d赛季: 场次未输入或' + str(e))%(index)
+    if float(seasonData[5]) < 5:
+        return ('第%d赛季: 请先进行5场以上的比赛以定级')%(index)
 
     try:
         float(seasonData[6])
     except Exception as e:
-        return 'input error: 胜率未输入或' + str(e)
+        return ('第%d赛季: 胜率未输入或' + str(e))%(index)
 
     return None
 
@@ -70,8 +70,8 @@ def getHwScore():
     except Exception as e:
         return 'input error: season未输入或不是整数'
     season = int(seasonStr)
-    if season > 1:
-        return '抱歉，当前只支持一个赛季，多赛季后续开发中'
+    if season > 3:
+        return '华为分计算仅支持3个赛季以内数据'
     
     platyType = []
     score = []
@@ -87,7 +87,7 @@ def getHwScore():
     if type(seasonData) != list:
         return 'input error, seasonData is not list'
     for i in range(0, season):
-        errorLog = errorCheck(seasonData[i])
+        errorLog = errorCheck(i+1, seasonData[i])
         if errorLog != None:
             return errorLog
         platyType.append(seasonData[i][0])
