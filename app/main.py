@@ -3,7 +3,7 @@ import os
 from flask import Flask, request, render_template
 from get_hw_score import GetHwScoreByPOST
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static/', static_url_path='')
 
 @app.route('/')
 def hello_world():
@@ -44,6 +44,8 @@ def errorCheck(seasonData):
         float(seasonData[5])
     except Exception as e:
         return 'input error: 场次未输入或' + str(e)
+    if float(seasonData[5]) <= 5:
+        return 'input error: 请先进行5场以上的比赛以定级'
 
     try:
         float(seasonData[6])
