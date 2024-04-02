@@ -38,14 +38,27 @@ class Member:
         self._lossMin = -40
         pass
 
-    def addData(self, platType, score, rating, rwsAndWe, adr, times, rate):
+    def addData(self, platType, score, rating, rwsAndWe, adr, times, rate, starNum):
         self.platType.append(int(platType))
-        self.score.append(float(score))
+        if starNum != 0:
+            self.score.append(self.getS_score(score, starNum, times))
+        else:
+            self.score.append(float(score))
         self.rating.append(float(rating))
         self.rwsAndWe.append(float(rwsAndWe))
         self.adr.append(float(adr))
         self.times.append(float(times))
         self.rate.append(float(rate))
+
+    def getS_score(self, score, startNum, times):
+        if startNum <= 10:
+            return (2400 + startNum*10) * (((score-2400)/times*100+2400)/2500)
+        elif startNum <= 20:
+            return (2500 + (startNum-10)*11) * (((score-2400)/times*100+2400)/2620)
+        elif startNum <= 30:
+            return (2620 + (startNum-20)*12) * (((score-2400)/times*100+2400)/2740)
+        else:
+            return (2740 + (startNum-30)*13) * (((score-2400)/times*100+2400)/2870)
     
     def dataPrint(self):
         print(self.platType, self.score, self.rating, self.rwsAndWe, self.adr, self.times, self.rate)
@@ -58,7 +71,7 @@ class Member:
                 self.rwsAndWe[i] = self.rwsAndWe[i] * 1.6 
             fixScore = weight['rating'].calc(self.rating[i]) + weight['adr'].calc(self.adr[i]) + (weight['we'].calc(self.rwsAndWe[i]) if self.platType[i] == 0 else weight['rws'].calc(self.rwsAndWe[i]))
             startScore = self.getStartScore(i, weight)
-            realScore.append((self.score[i] + startScore) / 2 + self.getAtan(fixScore * max(0, self.getFixRate(self.times[i]))))
+            realScore.append((self.score[i] + startScore) / 2 + self.getAtan(fixScore * (max(0, self.getTimesFixRate(self.times[i])) + max(0, self.getScoreFixRate(self.score[i])))/2 ))
         realScore.sort(reverse=True)
         num = min(self.season, 3)
         for i in range(0, num):
@@ -82,11 +95,19 @@ class Member:
         lossScore = ((self._lossMax-self._lossMin)/(2.0-0.5) * (base-0.5) + self._lossMin) * lossTimes
         return self.score[index] - max((winScore+lossScore)*max(1, 20/self.times[index]), 0)
     
-    def getFixRate(self, times):
-        if times >= 10:
-            return (times - 10) / 40 + 1
-        else:
+    def getTimesFixRate(self, times):
+        if times < 10:
             return times / 10
+        elif times < 50:
+            return (times - 10) / 40 + 0.5
+        elif times < 100:
+            return 1.5 - (times - 50) * 0.03
+        else:
+            return 0
+        
+    def getScoreFixRate(self, score):
+        score /= 100
+        return 1 - (abs(score-18)*abs(score-18) * 0.0078125)
     
     def getAtan(self, x):
         res = math.atan(x * 1.732 / 700) * 900 / math.pi
@@ -114,7 +135,10 @@ def getInput():
         memberList.append(member)
         for loopj in range(0, season):
             data = input('输入平台类型(完美是0,5e是1)、天梯分、rating、rws/we、adr、场次、胜率:\n').split(' ')
-            member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]))
+            if float(data[1]) < 2400:
+                member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]), 0)
+            else:
+                member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]), float(data[7]))
 
 def getAllMemberScore():
     global memberList
@@ -129,7 +153,7 @@ def GetHwScoreByPOST(data):
     seasonData = data['seasonData']
     member = Member(name, id, season)
     for i in range(0, season):
-        member.addData(int(seasonData[i][0]), float(seasonData[i][1]), float(seasonData[i][2]), float(seasonData[i][3]), float(seasonData[i][4]), float(seasonData[i][5]), float(seasonData[i][6]))
+        member.addData(int(seasonData[i][0]), float(seasonData[i][1]), float(seasonData[i][2]), float(seasonData[i][3]), float(seasonData[i][4]), float(seasonData[i][5]), float(seasonData[i][6]), 0)
     return ('name = %s; id = %s; hwScore = %.2f'%(member.name, member.id, member.getRealScore(weightList)))
 
 def testGetHwScore():
