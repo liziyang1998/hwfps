@@ -1,3 +1,4 @@
+# -*-coding:utf-8 -*-
 import sys
 import math
 
@@ -30,6 +31,7 @@ class Member:
         self.adr = []
         self.times = []
         self.rate = []
+        self.realAns = 0
 
         self._scoreRate = [[0,0,0], [1,0,0], [0.8,0.2,0], [0.65, 0.2, 0.15]]
         self._winMax = 35
@@ -38,9 +40,12 @@ class Member:
         self._lossMin = -40
         pass
 
+    def __lt__(self, other):
+        return self.realAns < other.realAns
+
     def addData(self, platType, score, rating, rwsAndWe, adr, times, rate, starNum):
         self.platType.append(int(platType))
-        if starNum != 0:
+        if starNum != -1:
             self.score.append(self.getS_score(score, starNum, times))
         else:
             self.score.append(float(score))
@@ -52,13 +57,13 @@ class Member:
 
     def getS_score(self, score, startNum, times):
         if startNum <= 10:
-            return (2400 + startNum*10) * (((score-2400)/times*100+2400)/2500)
+            return (2400 + startNum*10) * (((score-2400)/times*100+2400)/2400)
         elif startNum <= 20:
-            return (2500 + (startNum-10)*11) * (((score-2400)/times*100+2400)/2620)
+            return (2500 + (startNum-10)*11) * (((score-2400)/times*100+2400)/2500)
         elif startNum <= 30:
-            return (2620 + (startNum-20)*12) * (((score-2400)/times*100+2400)/2740)
+            return (2620 + (startNum-20)*12) * (((score-2400)/times*100+2400)/2620)
         else:
-            return (2740 + (startNum-30)*13) * (((score-2400)/times*100+2400)/2870)
+            return (2740 + (startNum-30)*13) * (((score-2400)/times*100+2400)/2740)
     
     def dataPrint(self):
         print(self.platType, self.score, self.rating, self.rwsAndWe, self.adr, self.times, self.rate)
@@ -76,6 +81,7 @@ class Member:
         num = min(self.season, 3)
         for i in range(0, num):
             ans = ans + realScore[i] * self._scoreRate[num][i]
+        self.realAns = ans
         return ans
     
     def getStartScore(self, index, weight):
@@ -135,14 +141,36 @@ def getInput():
         memberList.append(member)
         for loopj in range(0, season):
             data = input('输入平台类型(完美是0,5e是1)、天梯分、rating、rws/we、adr、场次、胜率:\n').split(' ')
-            if float(data[1]) < 2400:
-                member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]), 0)
+            if float(data[1]) < 2400 or int(data[0]) == 1:
+                member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]), -1)
             else:
                 member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]), float(data[7]))
+
+def getFileInput():
+    if len(sys.argv) != 2:
+        print('参数不够')
+        exit()
+    with open(sys.argv[1], encoding='utf-8') as f:
+        n = int(f.readline().strip())
+        for loopi in range(0, int(n)):
+            info = f.readline().split(' ')
+            name, id, season = info[0], info[1], int(info[2])
+            member = Member(name, id, season)
+            memberList.append(member)
+            for loopj in range(0, season):
+                data = f.readline().split(' ')
+                if float(data[1]) < 2400 or int(data[0]) == 1:
+                    member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]), -1)
+                else:
+                    member.addData(int(data[0]), float(data[1]), float(data[2]), float(data[3]), float(data[4]), float(data[5]), float(data[6]), float(data[7]))
+
 
 def getAllMemberScore():
     global memberList
     global weightList
+    for member in memberList:
+        member.getRealScore(weightList)
+    memberList = sorted(memberList, reverse=True)
     for member in memberList:
         print('%s,%s,%.2f'%(member.name, member.id, member.getRealScore(weightList)))
 
@@ -153,8 +181,12 @@ def GetHwScoreByPOST(data):
     seasonData = data['seasonData']
     member = Member(name, id, season)
     for i in range(0, season):
-        member.addData(int(seasonData[i][0]), float(seasonData[i][1]), float(seasonData[i][2]), float(seasonData[i][3]), float(seasonData[i][4]), float(seasonData[i][5]), float(seasonData[i][6]), 0)
+        member.addData(int(seasonData[i][0]), float(seasonData[i][1]), float(seasonData[i][2]), float(seasonData[i][3]), float(seasonData[i][4]), float(seasonData[i][5]), float(seasonData[i][6]), -1)
     return ('name = %s; id = %s; hwScore = %.2f'%(member.name, member.id, member.getRealScore(weightList)))
+
+def getHwScoreByFile():
+    getFileInput()
+    getAllMemberScore()
 
 def testGetHwScore():
     getInput()
