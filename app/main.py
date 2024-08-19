@@ -13,44 +13,61 @@ def hello_world():
     return render_template('index.html')
 
 def errorCheck(index, seasonData):
+    if len(seasonData) != 7:
+        return ('数据不够，需要7个数据，实际只有%d个') % (len(seasonData[0]))
     try:
         int(seasonData[0])
     except Exception as e:
-        return ('第%d赛季: 平台类型' + str(e))%(index)
+        errorLog = '第%d赛季: 平台类型' % (index)
+        errorLog = errorLog + repr(e)
+        return errorLog
     if int(seasonData[0]) < 0:
         return ('第%d赛季: 平台类型未选择')%(index)
     
     try:
         float(seasonData[1])
     except Exception as e:
-        return ('第%d赛季: 天梯分未输入或' + str(e))%(index)
+        errorLog = '第%d赛季: 天梯分未输入或' % (index)
+        errorLog = errorLog + repr(e)
+        return errorLog
     
     try:
         float(seasonData[2])
     except Exception as e:
-        return ('第%d赛季: rating未输入或' + str(e))%(index)
+        errorLog = '第%d赛季: rating未输入或' % (index)
+        errorLog = errorLog + repr(e)
+        return errorLog
 
     try:
         float(seasonData[3])
     except Exception as e:
-        return ('第%d赛季: rws/we未输入或' + str(e))%(index)
+        errorLog = '第%d赛季: rws/we未输入或' % (index)
+        errorLog = errorLog + repr(e)
+        return errorLog
 
     try:
         float(seasonData[4])
     except Exception as e:
-        return ('第%d赛季: adr未输入或' + str(e))%(index)
+        errorLog = '第%d赛季: adr未输入或' % (index)
+        errorLog = errorLog + repr(e)
+        return errorLog
 
     try:
         float(seasonData[5])
     except Exception as e:
-        return ('第%d赛季: 场次未输入或' + str(e))%(index)
+        errorLog = '第%d赛季: 场次未输入或' % (index)
+        errorLog = errorLog + repr(e)
+        return errorLog
     if float(seasonData[5]) < 5:
         return ('第%d赛季: 请先进行5场以上的比赛以定级')%(index)
 
     try:
         float(seasonData[6])
     except Exception as e:
-        return ('第%d赛季: 胜率未输入或' + str(e))%(index)
+        errorLog = '第%d赛季: 胜率未输入或' % (index)
+        errorLog = errorLog + repr(e) + '\n'
+        errorLog = errorLog + '请检查是否输入了\'%\'，如果有请删除'
+        return errorLog
 
     return None
 

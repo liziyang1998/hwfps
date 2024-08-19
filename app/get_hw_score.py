@@ -192,4 +192,4 @@ def testGetHwScore():
     getInput()
     getAllMemberScore()
 
-getHwScoreByFile()
+# getHwScoreByFile()
