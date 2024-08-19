@@ -57,13 +57,13 @@ class Member:
 
     def getS_score(self, score, startNum, times):
         if startNum <= 10:
-            return (2400 + startNum*10) * (((score-2400)/times*100+2400)/2400)
+            return (2400 + startNum*10) * (((score-2400)/times*min(150, times)+2400)/2400)
         elif startNum <= 20:
-            return (2500 + (startNum-10)*11) * (((score-2400)/times*100+2400)/2500)
+            return (2500 + (startNum-10)*11) * (((score-2400)/times*min(150, times)+2400)/2500)
         elif startNum <= 30:
-            return (2620 + (startNum-20)*12) * (((score-2400)/times*100+2400)/2620)
+            return (2620 + (startNum-20)*12) * (((score-2400)/times*min(150, times)+2400)/2620)
         else:
-            return (2740 + (startNum-30)*13) * (((score-2400)/times*100+2400)/2740)
+            return (2740 + (startNum-30)*13) * (((score-2400)/times*min(150, times)+2400)/2740)
     
     def dataPrint(self):
         print(self.platType, self.score, self.rating, self.rwsAndWe, self.adr, self.times, self.rate)
@@ -172,7 +172,7 @@ def getAllMemberScore():
         member.getRealScore(weightList)
     memberList = sorted(memberList, reverse=True)
     for member in memberList:
-        print('%s,%s,%.2f'%(member.name, member.id, member.getRealScore(weightList)))
+        print('%s,%s,%.2f'%(member.name, member.id, member.realAns))
 
 def GetHwScoreByPOST(data):
     name = data['name']
@@ -191,3 +191,5 @@ def getHwScoreByFile():
 def testGetHwScore():
     getInput()
     getAllMemberScore()
+
+getHwScoreByFile()
